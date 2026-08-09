@@ -117,10 +117,10 @@ function setup3DCardTilt() {
             y: topY - bounds.height / 2
         };
 
-        const rotateX = (center.y / (bounds.height / 2)) * -12;
-        const rotateY = (center.x / (bounds.width / 2)) * 12;
+        const rotateX = (center.y / (bounds.height / 2)) * -18;
+        const rotateY = (center.x / (bounds.width / 2)) * 18;
 
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
         card.style.setProperty('--mouse-x', `${(leftX / bounds.width) * 100}%`);
         card.style.setProperty('--mouse-y', `${(topY / bounds.height) * 100}%`);
     }

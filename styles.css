@@ -78,47 +78,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 img { display: block; }
 svg { display: block; }
 
-/* ── Animated Background ─────────────────────────────────────── */
+/* ── Animated Radial Gradient Background (Breathing Effect) ──── */
 .bg-mesh {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
-}
-
-.mesh-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
-    /* Use will-change so GPU handles blobs, not main thread */
-    will-change: transform;
-}
-
-.b1 {
-    width: 420px; height: 420px;
-    top: -100px; left: -80px;
-    background: radial-gradient(circle, #FF7A00, #FF3D00 70%, transparent);
-    animation: drift 22s ease-in-out infinite alternate;
-}
-.b2 {
-    width: 480px; height: 480px;
-    bottom: -150px; right: -100px;
-    background: radial-gradient(circle, #0A84FF, #BF5AF2 70%, transparent);
-    animation: drift 28s ease-in-out infinite alternate-reverse;
-}
-.b3 {
-    width: 340px; height: 340px;
-    top: 40%; left: 25%;
-    background: radial-gradient(circle, #FF9F0A, #FF5500 70%, transparent);
-    animation: drift 20s ease-in-out infinite alternate;
-    animation-delay: -10s;
-}
-
-@keyframes drift {
-    0%   { transform: translate(0, 0); }
-    100% { transform: translate(60px, 80px); }
+    will-change: background;
+    transition: background 0.1s linear;
 }
 
 /* ── Main Page Layout ────────────────────────────────────────── */

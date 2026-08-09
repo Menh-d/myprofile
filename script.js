@@ -28,6 +28,7 @@ const GRADIENTS = {
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof PROFILE_CONFIG === 'undefined') return;
 
+    initAnimatedGradient();
     renderSocialList();
     renderSkills();
     renderInterests();
@@ -35,6 +36,64 @@ document.addEventListener('DOMContentLoaded', () => {
     setupThemeToggle();
     lucide.createIcons();
 });
+
+/* ── Animated Gradient Background (Breathing Effect) ────────── */
+function initAnimatedGradient() {
+    const container = document.getElementById('animated-bg');
+    if (!container) return;
+
+    const startingGap = 125;
+    const breathing = true;
+    const animationSpeed = 0.025;
+    const breathingRange = 6;
+    const topOffset = 0;
+
+    const darkColors = [
+        "#080c14",
+        "#2979FF",
+        "#FF80AB",
+        "#FF6D00",
+        "#FFD600",
+        "#00E676",
+        "#3D5AFE"
+    ];
+
+    const lightColors = [
+        "#f0f2f7",
+        "#448AFF",
+        "#FF80AB",
+        "#FF6D00",
+        "#FFD600",
+        "#00E676",
+        "#3D5AFE"
+    ];
+
+    const gradientStops = [35, 50, 60, 70, 80, 90, 100];
+
+    let width = startingGap;
+    let directionWidth = 1;
+
+    function animate() {
+        if (width >= startingGap + breathingRange) directionWidth = -1;
+        if (width <= startingGap - breathingRange) directionWidth = 1;
+
+        if (!breathing) directionWidth = 0;
+        width += directionWidth * animationSpeed;
+
+        const isLight = document.body.getAttribute('data-theme') === 'light';
+        const colors = isLight ? lightColors : darkColors;
+
+        const stopsString = gradientStops
+            .map((stop, index) => `${colors[index]} ${stop}%`)
+            .join(", ");
+
+        container.style.background = `radial-gradient(${width.toFixed(2)}% ${(width + topOffset).toFixed(2)}% at 50% 20%, ${stopsString})`;
+
+        requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+}
 
 /* ── Social List ─────────────────────────────────────────────── */
 function renderSocialList() {

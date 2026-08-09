@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sisamane Dimak (Menh) | OLDDOG ໝາເຖົ້າ</title>
+    <meta name="description" content="Digital Profile & NFC Smart Business Card for Sisamane Dimak (Menh) - OLDDOG ໝາເຖົ້າ. Tap to save contact and connect instantly.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- App Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Fluid Animated Background Mesh (Gradient Orange Theme) -->
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i data-lucide="check-circle"></i>
+        <span class="toast-text">Success message</span>
+    </div>
+
+    <!-- Main Mobile Container -->
+    <div class="app-container">
+
+        <!-- 1. NFC Connection Status Banner Header -->
+        <header class="nfc-banner">
+            <div class="nfc-status">
+                <div class="nfc-pulse-ring">
+                    <div class="dot" style="background-color: #FF7A00;"></div>
+                    <div class="ring" style="border-color: #FF7A00;"></div>
+                </div>
+                <span>NFC Card Connected</span>
+            </div>
+            <button id="theme-toggle" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                <i data-lucide="sun"></i>
+            </button>
+        </header>
+
+        <!-- 2. Apple 3D Holographic Card Hero -->
+        <section class="profile-card-wrapper">
+            <div id="profile-card" class="profile-card">
+                
+                <!-- Avatar & Online Badge -->
+                <div class="avatar-container">
+                    <img id="profile-avatar" src="assets/avatar.jpg" alt="Sisamane Dimak" class="avatar-img">
+                    <div id="status-indicator" class="status-badge" style="background-color: #FF7A00; box-shadow: 0 0 12px #FF7A00;" title="Online & Ready to Connect"></div>
+                </div>
+
+                <!-- Name Layout (Top: English, Bottom: Lao) -->
+                <h1 id="profile-name" class="profile-name" style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                    <span style="font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                        Sisamane Dimak ( Menh ) <i data-lucide="check-circle-2" class="verified-icon" style="color: #FF7A00;"></i>
+                    </span>
+                    <span style="font-size: 1.15rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); margin-top: 2px;">
+                        ສີສະໝານ ດີມາກ ( ເໝັ້ນ )
+                    </span>
+                </h1>
+                
+                <!-- Title -->
+                <p id="profile-title" class="profile-title" style="font-size: 1.1rem; font-weight: 700; color: #FF7A00; margin-top: 6px;">
+                    OLDDOG ໝາເຖົ້າ
+                </p>
+
+                <!-- Bio & Location Tag -->
+                <p id="profile-bio" class="profile-bio">
+                    OLDDOG ໝາເถົ້າ | Tap my NFC card to save contact & connect!
+                </p>
+                
+                <div class="location-container" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div id="profile-location" class="location-tag" style="margin-bottom: 0;">
+                        <i data-lucide="map-pin"></i> Vientiane Laos
+                    </div>
+                    <div class="location-tag" style="margin-bottom: 0;">
+                        <i data-lucide="phone"></i> +856 20 77527911
+                    </div>
+                </div>
+
+                <!-- Quick Action Buttons (Add Contact & Share QR only) -->
+                <div class="hero-actions">
+                    <button id="btn-vcard" class="btn-action primary">
+                        <i data-lucide="user-plus"></i> Add Contact
+                    </button>
+                    <button id="btn-qr" class="btn-action secondary">
+                        <i data-lucide="qr-code"></i> Share QR
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. iOS Segmented Control Tabs (2 Tabs: Socials & About) -->
+        <nav class="segmented-control">
+            <div class="tab-indicator"></div>
+            <button class="tab-btn active" data-tab="socials">
+                <i data-lucide="share-2"></i> Social Links
+            </button>
+            <button class="tab-btn" data-tab="about">
+                <i data-lucide="user"></i> About & Contact
+            </button>
+        </nav>
+
+        <!-- 4. Tab Panels -->
+        <main class="tab-panels">
+
+            <!-- Tab 1: Social Links Hub -->
+            <section id="tab-socials" class="tab-content-panel active">
+                <div class="glass-card">
+                    <h2 class="card-title" style="color: #FF7A00;"><i data-lucide="globe" style="color: #FF7A00;"></i> Connect & Follow</h2>
+                    <div id="social-grid" class="social-grid">
+                        <!-- Populated by script.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab 2: About & Contact Info -->
+            <section id="tab-about" class="tab-content-panel">
+                <div class="glass-card">
+                    <h2 class="card-title" style="color: #FF7A00;"><i data-lucide="phone-call" style="color: #FF7A00;"></i> Contact Details</h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                        <a href="tel:+8562077527911" class="social-item" style="width: 100%;">
+                            <div class="social-icon-box" style="background: linear-gradient(135deg, #FF7A00, #FF3D00);">
+                                <i data-lucide="phone"></i>
+                            </div>
+                            <div class="social-info">
+                                <span class="social-platform">Direct Phone</span>
+                                <span class="social-handle">+856 20 77527911</span>
+                            </div>
+                        </a>
+                        <div class="social-item" style="width: 100%;">
+                            <div class="social-icon-box" style="background: linear-gradient(135deg, #FFB703, #FF7A00);">
+                                <i data-lucide="map-pin"></i>
+                            </div>
+                            <div class="social-info">
+                                <span class="social-platform">Location</span>
+                                <span class="social-handle">Vientiane Laos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="card-title"><i data-lucide="sparkles"></i> Expertise & Focus</h2>
+                    <div id="skills-container" class="skills-list">
+                        <!-- Populated by script.js -->
+                    </div>
+
+                    <h2 class="card-title" style="margin-top: 24px;"><i data-lucide="heart"></i> Tags & Hobbies</h2>
+                    <div id="interests-container" class="interests-tags">
+                        <!-- Populated by script.js -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- 5. iOS Floating Bottom Dock -->
+    <div class="floating-dock">
+        <button id="dock-vcard" class="dock-item primary-dock">
+            <i data-lucide="user-plus"></i>
+            <span class="dock-tooltip">Save Contact (.vcf)</span>
+        </button>
+        <button id="dock-qr" class="dock-item">
+            <i data-lucide="qr-code"></i>
+            <span class="dock-tooltip">Show QR Code</span>
+        </button>
+        <button id="dock-share" class="dock-item">
+            <i data-lucide="copy"></i>
+            <span class="dock-tooltip">Copy Link</span>
+        </button>
+        <button id="dock-nfc" class="dock-item">
+            <i data-lucide="cpu"></i>
+            <span class="dock-tooltip">NFC Tag Setup</span>
+        </button>
+    </div>
+
+    <!-- 6. Modal: Apple Wallet Style QR Code -->
+    <div id="qr-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close-btn"><i data-lucide="x"></i></button>
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 4px;">Sisamane Dimak (Menh) QR</h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Scan with phone camera if NFC is unavailable</p>
+            
+            <div class="qr-canvas-wrapper">
+                <canvas id="qr-canvas"></canvas>
+            </div>
+
+            <button onclick="copyProfileURL()" class="btn-action primary" style="width: 100%;">
+                <i data-lucide="copy"></i> Copy Profile Link
+            </button>
+        </div>
+    </div>
+
+    <!-- 7. Modal: NFC Tag Setup Guide -->
+    <div id="nfc-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close-btn"><i data-lucide="x"></i></button>
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;">📲 Write to NFC Tag Guide</h3>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">
+                How to record this profile URL into your physical NFC card or coin:
+            </p>
+            
+            <div class="nfc-steps">
+                <div class="nfc-step-item">
+                    <div class="step-number">1</div>
+                    <span>Download <strong>NFC Tools</strong> app on iOS or Android.</span>
+                </div>
+                <div class="nfc-step-item">
+                    <div class="step-number">2</div>
+                    <span>Copy this Profile URL using the button below.</span>
+                </div>
+                <div class="nfc-step-item">
+                    <div class="step-number">3</div>
+                    <span>In NFC Tools app, select <strong>Write &gt; Add a record &gt; URL / URI</strong>.</span>
+                </div>
+                <div class="nfc-step-item">
+                    <div class="step-number">4</div>
+                    <span>Paste the URL and tap <strong>Write / 100 Bytes</strong> then tap your physical NFC card!</span>
+                </div>
+            </div>
+
+            <button onclick="copyProfileURL()" class="btn-action primary" style="width: 100%; margin-top: 10px;">
+                <i data-lucide="copy"></i> Copy URL to Clipboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Config & Main Script -->
+    <script src="profile-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

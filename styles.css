@@ -1,6 +1,5 @@
 /* ============================================================
    NFC Profile Card — Glass UI Design System
-   Inspired by: glassmorphism + Apple Liquid Glass + visionOS
    ============================================================ */
 
 /* ── Fonts & Tokens ─────────────────────────────────────────── */
@@ -9,10 +8,10 @@
 
     /* Colors */
     --bg: #080c14;
-    --surface: rgba(255,255,255,0.055);
-    --surface-hover: rgba(255,255,255,0.1);
-    --border: rgba(255,255,255,0.12);
-    --border-bright: rgba(255,255,255,0.28);
+    --surface: rgba(255,255,255,0.07);
+    --surface-hover: rgba(255,255,255,0.13);
+    --border: rgba(255,255,255,0.13);
+    --border-bright: rgba(255,255,255,0.26);
 
     --text-1: #ffffff;
     --text-2: rgba(255,255,255,0.65);
@@ -24,10 +23,10 @@
     --blue: #0A84FF;
     --mint: #30D158;
 
-    /* Glass */
-    --blur: blur(32px) saturate(180%);
-    --radius-hero: 36px;
-    --radius-card: 24px;
+    /* Glass — reduced blur for mobile perf */
+    --blur: blur(20px) saturate(160%);
+    --radius-hero: 32px;
+    --radius-card: 22px;
     --radius-item: 18px;
     --radius-pill: 9999px;
 
@@ -91,34 +90,35 @@ svg { display: block; }
 .mesh-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.45;
+    filter: blur(80px);
+    opacity: 0.4;
+    /* Use will-change so GPU handles blobs, not main thread */
+    will-change: transform;
 }
 
 .b1 {
-    width: 500px; height: 500px;
-    top: -150px; left: -100px;
-    background: radial-gradient(circle, #FF7A00 0%, #FF3D00 60%, transparent 100%);
-    animation: drift 20s ease-in-out infinite alternate;
+    width: 420px; height: 420px;
+    top: -100px; left: -80px;
+    background: radial-gradient(circle, #FF7A00, #FF3D00 70%, transparent);
+    animation: drift 22s ease-in-out infinite alternate;
 }
 .b2 {
-    width: 600px; height: 600px;
-    bottom: -200px; right: -150px;
-    background: radial-gradient(circle, #0A84FF 0%, #BF5AF2 60%, transparent 100%);
-    animation: drift 25s ease-in-out infinite alternate-reverse;
+    width: 480px; height: 480px;
+    bottom: -150px; right: -100px;
+    background: radial-gradient(circle, #0A84FF, #BF5AF2 70%, transparent);
+    animation: drift 28s ease-in-out infinite alternate-reverse;
 }
 .b3 {
-    width: 400px; height: 400px;
-    top: 40%; left: 30%;
-    background: radial-gradient(circle, #FF9F0A 0%, #FF5500 60%, transparent 100%);
-    animation: drift 18s ease-in-out infinite alternate;
-    animation-delay: -8s;
+    width: 340px; height: 340px;
+    top: 40%; left: 25%;
+    background: radial-gradient(circle, #FF9F0A, #FF5500 70%, transparent);
+    animation: drift 20s ease-in-out infinite alternate;
+    animation-delay: -10s;
 }
 
 @keyframes drift {
-    0%   { transform: translate(0, 0) scale(1); }
-    50%  { transform: translate(80px, 60px) scale(1.2); }
-    100% { transform: translate(-60px, 100px) scale(0.9); }
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(60px, 80px); }
 }
 
 /* ── Main Page Layout ────────────────────────────────────────── */
@@ -353,7 +353,8 @@ svg { display: block; }
 .hero-actions {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
 }
 
 .btn {
@@ -361,50 +362,48 @@ svg { display: block; }
     align-items: center;
     justify-content: center;
     gap: 7px;
-    padding: 11px 20px;
+    padding: 13px 18px;
     border-radius: var(--radius-pill);
     font-size: 0.86rem;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
     border: none;
-    transition: all 0.25s var(--ease-spring);
+    /* Faster, simpler transition — no spring for tap */
+    transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     color: #fff;
-    box-shadow: 0 6px 20px rgba(255,122,0,0.4);
+    box-shadow: 0 4px 16px rgba(255,122,0,0.35);
     flex: 1;
+    min-width: 0;
 }
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(255,122,0,0.55);
-}
-.btn-primary:active { transform: translateY(0) scale(0.97); }
+.btn-primary:hover { box-shadow: 0 6px 22px rgba(255,122,0,0.5); }
+.btn-primary:active { transform: scale(0.96); opacity: 0.9; }
 
 .btn-glass {
-    background: var(--surface);
+    background: rgba(255,255,255,0.1);
     color: var(--text-1);
     border: 1px solid var(--border-bright);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
+    /* No backdrop-filter here — saves perf on mobile */
     flex: 1;
+    min-width: 0;
 }
-.btn-glass:hover {
-    background: var(--surface-hover);
-    transform: translateY(-2px);
-}
-.btn-glass:active { transform: translateY(0) scale(0.97); }
+.btn-glass:hover { background: rgba(255,255,255,0.16); }
+.btn-glass:active { transform: scale(0.96); opacity: 0.9; }
 
+/* Share is now same height pill, just narrower */
 .btn-icon-only {
-    flex: 0;
-    width: 44px;
-    height: 44px;
+    flex: 0 0 48px;
+    width: 48px;
     padding: 0;
-    border-radius: 50%;
+    border-radius: var(--radius-pill);
 }
 
 /* ── SOCIAL LIST ─────────────────────────────────────────────── */
@@ -422,51 +421,34 @@ svg { display: block; }
     gap: 14px;
     padding: 14px 16px;
     border-radius: var(--radius-item);
-    background: var(--surface);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
+    /* Solid bg — no backdrop-filter per item for mobile perf */
+    background: rgba(255,255,255,0.07);
     border: 1px solid var(--border);
-    box-shadow: var(--shadow-item);
     color: var(--text-1);
     text-decoration: none;
-    transition: all 0.3s var(--ease-spring);
-    position: relative;
-    overflow: hidden;
-    animation: fadeInUp 0.5s var(--ease-spring) both;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    animation: fadeInUp 0.4s ease both;
 }
-
-.social-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius-item);
-    background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.social-item:hover::before { opacity: 1; }
 
 .social-item:hover {
-    transform: translateY(-3px) scale(1.015);
+    background: rgba(255,255,255,0.12);
     border-color: var(--border-bright);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--border-bright);
 }
-.social-item:active { transform: translateY(-1px) scale(1.005); }
+.social-item:active { transform: scale(0.98); background: rgba(255,255,255,0.14); }
 
 .social-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     color: #fff;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    transition: transform 0.3s var(--ease-spring);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-.social-item:hover .social-icon { transform: scale(1.08) rotate(-4deg); }
 .social-icon img { width: 100%; height: 100%; object-fit: contain; }
 .social-icon svg { width: 22px; height: 22px; }
 
@@ -574,65 +556,62 @@ a.about-value:hover { color: var(--accent); }
 /* ── DOCK ────────────────────────────────────────────────────── */
 .dock {
     position: fixed;
-    bottom: 24px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 6px;
-    padding: 10px 16px;
-    background: rgba(20,22,30,0.85);
-    backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
-    border: 1px solid rgba(255,255,255,0.2);
+    gap: 4px;
+    padding: 8px 12px;
+    background: rgba(18,20,28,0.92);
+    /* Single blur layer for dock only */
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.18);
     border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-dock);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
     z-index: 100;
-    animation: fadeInUp 0.8s var(--ease-spring) 0.2s both;
+    animation: fadeInUp 0.5s ease 0.1s both;
 }
 
 [data-theme="light"] .dock {
-    background: rgba(240,242,247,0.85);
+    background: rgba(235,238,245,0.92);
 }
 
 .dock-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 3px;
-    width: 56px;
-    height: 54px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.08);
+    width: 58px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.1);
     color: var(--text-1);
     cursor: pointer;
-    transition: all 0.25s var(--ease-spring);
-    justify-content: center;
+    /* Fast tap response */
+    transition: background 0.12s ease, transform 0.12s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 .dock-btn svg { width: 20px; height: 20px; }
 .dock-label {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     font-weight: 600;
     color: var(--text-3);
     letter-spacing: 0.02em;
 }
 
-.dock-btn:hover {
-    transform: translateY(-6px) scale(1.12);
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.4);
-}
-.dock-btn:active { transform: translateY(-3px) scale(1.05); }
+.dock-btn:hover { background: rgba(255,255,255,0.15); }
+.dock-btn:active { transform: scale(0.92); }
 
 .dock-btn.primary-dock {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     border-color: transparent;
-    box-shadow: 0 4px 16px rgba(255,122,0,0.4);
+    box-shadow: 0 4px 14px rgba(255,122,0,0.35);
 }
-.dock-btn.primary-dock:hover {
-    box-shadow: 0 10px 28px rgba(255,122,0,0.6);
-}
+.dock-btn.primary-dock:active { transform: scale(0.92); }
 
 /* ── MODALS ──────────────────────────────────────────────────── */
 .modal-overlay {

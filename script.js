@@ -1,319 +1,265 @@
 /**
- * NFC Profile Card - Main Script
- * Handles 3D Tilt, vCard Generation, QR Code Modal, iOS Segment Tabs, and Theme Toggle
+ * NFC Profile Card — Main Script
+ * Glass Card Edition
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize Profile Information from PROFILE_CONFIG
-    initProfileContent();
-
-    // 2. Setup 3D Holographic Card Parallax & Glare
-    setup3DCardTilt();
-
-    // 3. Setup iOS Segmented Control Tabs
-    setupSegmentedTabs();
-
-    // 4. Setup Modals (QR Code & NFC Guide)
-    setupModals();
-
-    // 5. Setup Theme Toggle
-    setupThemeToggle();
-});
-
-// Custom Brand Icon SVGs for platforms not in standard Lucide
-const BRAND_ICONS = {
-    whatsapp: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>`,
-    telegram: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
-    soundcloud: `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225a.862.862 0 0 0-.862.863v4.612c0 .477.385.863.862.863h.05c.477 0 .863-.386.863-.863v-4.612a.863.863 0 0 0-.913-.863zm2.14-1.892a.862.862 0 0 0-.863.863v7.367c0 .476.386.862.863.862h.05a.863.863 0 0 0 .862-.862V11.196a.863.863 0 0 0-.912-.863zm2.14-1.282a.862.862 0 0 0-.862.863v9.512c0 .476.385.862.862.862h.05a.863.863 0 0 0 .863-.862V9.914a.863.863 0 0 0-.913-.863zm2.14-1.428a.862.862 0 0 0-.862.863v12.225c0 .476.385.863.862.863h.05a.863.863 0 0 0 .863-.863V8.486a.863.863 0 0 0-.913-.863zm2.14.737a.862.862 0 0 0-.862.863v10.625c0 .477.385.863.862.863h.05a.863.863 0 0 0 .863-.863V9.186a.863.863 0 0 0-.913-.863zm10.742 2.802a4.417 4.417 0 0 0-4.045 2.65 3.328 3.328 0 0 0-2.477-1.127.863.863 0 0 0-.863.863v7.87c0 .476.386.862.863.862h10.457A3.94 3.94 0 0 0 24 16.035c0-2.176-1.764-3.94-3.94-3.94z"/></svg>`
+/* ── Brand icon SVG strings ─────────────────────────────────── */
+const BRAND_SVGS = {
+    whatsapp: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`,
+    telegram: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`,
+    soundcloud: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11.56 8.87V17h8.76c1.43 0 2.68-1.17 2.68-2.68 0-1.49-1.21-2.68-2.68-2.68-.29 0-.56.05-.82.14-.16-2.57-2.28-4.63-4.9-4.63-1.07 0-2.07.33-2.89.87zM0 15.32c0 .93.75 1.68 1.68 1.68s1.68-.75 1.68-1.68V9.69C3.36 8.76 2.61 8 1.68 8S0 8.76 0 9.69v5.63zm4.93.5c0 .93.75 1.68 1.68 1.68s1.68-.75 1.68-1.68V8.11a1.68 1.68 0 10-3.36 0v7.71zm3.77.25c0 .93.75 1.68 1.68 1.68s1.68-.75 1.68-1.68V7.5a1.68 1.68 0 10-3.36 0v8.57z"/></svg>`
 };
 
-/* --------------------------------------------------------------------------
-   1. Populate Content from Configuration
-   -------------------------------------------------------------------------- */
-function initProfileContent() {
+/* Platform gradient maps */
+const GRADIENTS = {
+    facebook:   'linear-gradient(135deg, #1877F2, #0d5dbf)',
+    instagram:  'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+    youtube:    'linear-gradient(135deg, #FF0000, #cc0000)',
+    linkedin:   'linear-gradient(135deg, #0A66C2, #004182)',
+    whatsapp:   'linear-gradient(135deg, #25D366, #128C7E)',
+    telegram:   'linear-gradient(135deg, #2AABEE, #0088CC)',
+    soundcloud: 'linear-gradient(135deg, #FF5500, #FF2200)',
+    tiktok:     'linear-gradient(135deg, #010101, #69C9D0)',
+    twitter:    'linear-gradient(135deg, #1DA1F2, #0c85d0)',
+    github:     'linear-gradient(135deg, #333, #111)',
+};
+
+/* ── Init ───────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
     if (typeof PROFILE_CONFIG === 'undefined') return;
 
-    // Header Details
-    document.getElementById('profile-title').textContent = PROFILE_CONFIG.title;
-    document.getElementById('profile-bio').textContent = PROFILE_CONFIG.bio;
-    document.getElementById('profile-avatar').src = PROFILE_CONFIG.avatar;
+    renderSocialList();
+    renderSkills();
+    renderInterests();
+    setupModals();
+    setupThemeToggle();
+    lucide.createIcons();
+});
 
-    // Populate Skills
-    const skillsContainer = document.getElementById('skills-container');
-    if (skillsContainer && PROFILE_CONFIG.skills) {
-        skillsContainer.innerHTML = PROFILE_CONFIG.skills.map(s => `
-            <div class="skill-pill">
-                <i data-lucide="${s.icon || 'star'}"></i>
-                <span>${s.name}</span>
-            </div>
-        `).join('');
-    }
+/* ── Social List ─────────────────────────────────────────────── */
+function renderSocialList() {
+    const container = document.getElementById('social-list');
+    if (!container || !PROFILE_CONFIG.socials) return;
 
-    // Populate Interests
-    const interestsContainer = document.getElementById('interests-container');
-    if (interestsContainer && PROFILE_CONFIG.interests) {
-        interestsContainer.innerHTML = PROFILE_CONFIG.interests.map(i => `
-            <span class="tag-item">${i}</span>
-        `).join('');
-    }
+    container.innerHTML = PROFILE_CONFIG.socials.map(soc => {
+        const platformKey = soc.platform.toLowerCase();
+        const gradient = soc.gradient && soc.gradient !== 'transparent'
+            ? soc.gradient
+            : (GRADIENTS[platformKey] || 'linear-gradient(135deg, #555, #333)');
 
-    // Populate Social Hub Grid
-    const socialGrid = document.getElementById('social-grid');
-    if (socialGrid && PROFILE_CONFIG.socials) {
-        socialGrid.innerHTML = PROFILE_CONFIG.socials.map(soc => {
-            let iconHTML = '';
-            let boxStyle = `background: ${soc.gradient};`;
+        let iconHtml;
+        if (soc.imageIcon) {
+            iconHtml = `<img src="${soc.imageIcon}" alt="${soc.platform}">`;
+        } else if (BRAND_SVGS[platformKey]) {
+            iconHtml = BRAND_SVGS[platformKey];
+        } else {
+            iconHtml = `<i data-lucide="${soc.icon || 'link'}"></i>`;
+        }
 
-            if (soc.imageIcon) {
-                iconHTML = `<img src="${soc.imageIcon}" alt="${soc.platform}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">`;
-                boxStyle = `background: transparent; padding: 0; width: 40px; height: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);`;
-            } else {
-                const platformKey = (soc.icon || soc.platform).toLowerCase();
-                iconHTML = BRAND_ICONS[platformKey] || `<i data-lucide="${soc.icon}"></i>`;
-            }
+        const iconStyle = soc.imageIcon
+            ? 'background: rgba(255,255,255,0.1); border-radius: 14px;'
+            : `background: ${gradient};`;
 
-            return `
-                <a href="${soc.url}" target="_blank" rel="noopener noreferrer" class="social-item">
-                    <div class="social-icon-box" style="${boxStyle}">
-                        ${iconHTML}
-                    </div>
-                    <div class="social-info">
-                        <span class="social-platform">${soc.platform}</span>
-                        <span class="social-handle">${soc.handle}</span>
-                    </div>
-                </a>
-            `;
-        }).join('');
-    }
+        return `
+            <a href="${soc.url}" target="_blank" rel="noopener noreferrer" class="social-item">
+                <div class="social-icon" style="${iconStyle}">
+                    ${iconHtml}
+                </div>
+                <div class="social-info">
+                    <span class="social-name">${soc.platform}</span>
+                    <span class="social-handle">${soc.handle}</span>
+                </div>
+                <div class="social-arrow">
+                    <i data-lucide="chevron-right"></i>
+                </div>
+            </a>
+        `;
+    }).join('');
 
-    // Re-initialize Lucide Icons
-    if (window.lucide) {
-        lucide.createIcons();
-    }
+    lucide.createIcons();
 }
 
-/* --------------------------------------------------------------------------
-   2. 3D Holographic Parallax Card Tilt
-   -------------------------------------------------------------------------- */
-function setup3DCardTilt() {
-    const card = document.getElementById('profile-card');
-    const wrapper = document.querySelector('.profile-card-wrapper');
-    if (!card || !wrapper) return;
+/* ── Skills ──────────────────────────────────────────────────── */
+function renderSkills() {
+    const container = document.getElementById('skills-wrap');
+    if (!container || !PROFILE_CONFIG.skills) return;
 
-    let bounds;
+    const label = document.createElement('p');
+    label.className = 'skills-section-label';
+    label.textContent = 'Expertise & Focus';
+    container.parentNode.insertBefore(label, container);
 
-    function rotateToMouse(e) {
-        bounds = card.getBoundingClientRect();
-        const mouseX = e.clientX || (e.touches && e.touches[0].clientX);
-        const mouseY = e.clientY || (e.touches && e.touches[0].clientY);
+    container.innerHTML = PROFILE_CONFIG.skills.map(s => `
+        <span class="skill-tag">
+            <i data-lucide="${s.icon || 'star'}"></i>
+            ${s.name}
+        </span>
+    `).join('');
 
-        if (!mouseX || !mouseY) return;
-
-        const leftX = mouseX - bounds.left;
-        const topY = mouseY - bounds.top;
-
-        const center = {
-            x: leftX - bounds.width / 2,
-            y: topY - bounds.height / 2
-        };
-
-        const rotateX = (center.y / (bounds.height / 2)) * -18;
-        const rotateY = (center.x / (bounds.width / 2)) * 18;
-
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
-        card.style.setProperty('--mouse-x', `${(leftX / bounds.width) * 100}%`);
-        card.style.setProperty('--mouse-y', `${(topY / bounds.height) * 100}%`);
-    }
-
-    function resetRotation() {
-        card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    }
-
-    wrapper.addEventListener('mousemove', rotateToMouse);
-    wrapper.addEventListener('mouseleave', resetRotation);
-    wrapper.addEventListener('touchmove', rotateToMouse);
-    wrapper.addEventListener('touchend', resetRotation);
+    lucide.createIcons();
 }
 
-/* --------------------------------------------------------------------------
-   3. iOS Segmented Control Tabs
-   -------------------------------------------------------------------------- */
-function setupSegmentedTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const indicator = document.querySelector('.tab-indicator');
-    const panels = document.querySelectorAll('.tab-content-panel');
+/* ── Interests ───────────────────────────────────────────────── */
+function renderInterests() {
+    const container = document.getElementById('interests-wrap');
+    if (!container || !PROFILE_CONFIG.interests) return;
 
-    tabBtns.forEach((btn, index) => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    const label = document.createElement('p');
+    label.className = 'skills-section-label';
+    label.textContent = 'Tags & Interests';
+    container.parentNode.insertBefore(label, container);
 
-            if (indicator) {
-                indicator.style.transform = `translateX(${index * 100}%)`;
-            }
-
-            const targetPanel = btn.getAttribute('data-tab');
-            panels.forEach(panel => {
-                if (panel.id === `tab-${targetPanel}`) {
-                    panel.classList.add('active');
-                } else {
-                    panel.classList.remove('active');
-                }
-            });
-        });
-    });
+    container.innerHTML = PROFILE_CONFIG.interests.map(i => `
+        <span class="interest-tag">${i}</span>
+    `).join('');
 }
 
-/* --------------------------------------------------------------------------
-   4. Modals & vCard Actions
-   -------------------------------------------------------------------------- */
+/* ── Modals ──────────────────────────────────────────────────── */
 function setupModals() {
     const qrModal = document.getElementById('qr-modal');
     const nfcModal = document.getElementById('nfc-modal');
 
-    // Hero Action Buttons
-    document.getElementById('btn-vcard')?.addEventListener('click', downloadvCard);
-    document.getElementById('btn-qr')?.addEventListener('click', () => openModal(qrModal, generateQRCode));
+    // Button bindings
+    document.getElementById('btn-vcard')?.addEventListener('click', downloadVCard);
+    document.getElementById('btn-qr')?.addEventListener('click', () => openModal(qrModal, generateQR));
+    document.getElementById('btn-share')?.addEventListener('click', copyLink);
 
-    // Dock Buttons
-    document.getElementById('dock-vcard')?.addEventListener('click', downloadvCard);
-    document.getElementById('dock-qr')?.addEventListener('click', () => openModal(qrModal, generateQRCode));
-    document.getElementById('dock-share')?.addEventListener('click', copyProfileURL);
+    document.getElementById('dock-vcard')?.addEventListener('click', downloadVCard);
+    document.getElementById('dock-qr')?.addEventListener('click', () => openModal(qrModal, generateQR));
+    document.getElementById('dock-share')?.addEventListener('click', copyLink);
     document.getElementById('dock-nfc')?.addEventListener('click', () => openModal(nfcModal));
 
-    // Modal Close Triggers
-    document.querySelectorAll('.modal-close-btn, .modal-overlay').forEach(el => {
-        el.addEventListener('click', (e) => {
-            if (e.target === el || e.target.closest('.modal-close-btn')) {
-                closeAllModals();
-            }
+    // Close triggers
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) closeAllModals();
         });
+    });
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', closeAllModals);
     });
 }
 
-function openModal(modalEl, onOpen) {
-    if (!modalEl) return;
-    modalEl.classList.add('active');
-    if (onOpen) onOpen();
+function openModal(el, cb) {
+    if (!el) return;
+    el.classList.add('active');
+    if (cb) cb();
 }
 
 function closeAllModals() {
     document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }
 
-/* --------------------------------------------------------------------------
-   5. vCard (.vcf) Generator
-   -------------------------------------------------------------------------- */
-function downloadvCard() {
-    const v = PROFILE_CONFIG.vcard;
-    const vcardString = [
-        'BEGIN:VCARD',
-        'VERSION:3.0',
-        `N:${v.lastName};${v.firstName};;;`,
-        `FN:${PROFILE_CONFIG.name}`,
-        `ORG:${v.organization}`,
-        `TITLE:${v.title}`,
-        `TEL;TYPE=CELL:${v.phone || PROFILE_CONFIG.phone}`,
-        `EMAIL;TYPE=INTERNET:${v.email}`,
-        `URL:${v.website || window.location.href}`,
-        `ADR;TYPE=WORK:;;${v.address};;;`,
-        `NOTE:${v.note}`,
-        'END:VCARD'
-    ].join('\r\n');
-
-    const blob = new Blob([vcardString], { type: 'text/vcard;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Sisamane_Dimak_Contact.vcf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    showToast('🎴 vCard downloaded! Contact added.');
+/* ── QR Code ─────────────────────────────────────────────────── */
+let qrGenerated = false;
+function generateQR() {
+    if (qrGenerated) return;
+    const container = document.getElementById('qr-code-container');
+    if (!container) return;
+    try {
+        new QRCode(container, {
+            text: window.location.href,
+            width: 200,
+            height: 200,
+            colorDark: '#0a0c14',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        qrGenerated = true;
+    } catch(e) {
+        // Fallback: canvas-drawn QR placeholder
+        container.innerHTML = `<canvas id="qr-canvas" width="200" height="200"></canvas>`;
+        drawFallbackQR();
+    }
 }
 
-/* --------------------------------------------------------------------------
-   6. Copy Profile Link & Toast
-   -------------------------------------------------------------------------- */
-function copyProfileURL() {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-        showToast('🔗 Profile URL copied! Ready to write to NFC tag.');
-    }).catch(() => {
-        showToast('Profile URL copied to clipboard.');
-    });
-}
-
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
-    toast.querySelector('.toast-text').textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3200);
-}
-
-/* --------------------------------------------------------------------------
-   7. QR Code Canvas Generator
-   -------------------------------------------------------------------------- */
-function generateQRCode() {
+function drawFallbackQR() {
     const canvas = document.getElementById('qr-canvas');
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
-    const size = 200;
-    canvas.width = size;
-    canvas.height = size;
-
-    ctx.fillStyle = '#FFFFFF';
+    const size = 200, grid = 21, cell = size / grid;
+    ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#0a0c14';
 
-    ctx.fillStyle = '#070913';
-    const grid = 20;
-    const cellSize = size / grid;
+    // Finder patterns
+    [[0,0],[0,14],[14,0]].forEach(([r,c]) => {
+        ctx.fillRect(c*cell, r*cell, 7*cell, 7*cell);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect((c+1)*cell, (r+1)*cell, 5*cell, 5*cell);
+        ctx.fillStyle = '#0a0c14';
+        ctx.fillRect((c+2)*cell, (r+2)*cell, 3*cell, 3*cell);
+    });
 
-    const url = window.location.href;
-    let seed = url.length * 42;
-
+    // Random data dots
+    let s = window.location.href.length * 42;
     for (let r = 0; r < grid; r++) {
         for (let c = 0; c < grid; c++) {
-            if ((r < 6 && c < 6) || (r < 6 && c >= grid - 6) || (r >= grid - 6 && c < 6)) {
-                if ((r === 0 || r === 5 || c === 0 || c === 5) ||
-                    (r >= grid - 6 && (r === grid - 6 || r === grid - 1)) ||
-                    (c >= grid - 6 && (c === grid - 6 || c === grid - 1)) ||
-                    (r >= 2 && r <= 3 && c >= 2 && c <= 3) ||
-                    (r >= 2 && r <= 3 && c >= grid - 4 && c >= grid - 3) ||
-                    (r >= grid - 4 && c >= 2 && c <= 3)) {
-                    ctx.fillStyle = (r < 6 && c < 6) ? '#FF7A00' : '#070913';
-                    ctx.fillRect(c * cellSize, r * cellSize, cellSize - 1, cellSize - 1);
-                }
-                continue;
-            }
-
-            seed = (seed * 9301 + 49297) % 233280;
-            if (seed / 233280 > 0.45) {
-                ctx.fillStyle = '#070913';
-                ctx.fillRect(c * cellSize, r * cellSize, cellSize - 1, cellSize - 1);
+            if ((r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7)) continue;
+            s = (s * 1664525 + 1013904223) & 0x7fffffff;
+            if (s % 3 > 0) {
+                ctx.fillStyle = '#0a0c14';
+                ctx.fillRect(c*cell+0.5, r*cell+0.5, cell-1, cell-1);
             }
         }
     }
 }
 
-/* --------------------------------------------------------------------------
-   8. Theme Switcher (Dark/Light)
-   -------------------------------------------------------------------------- */
-function setupThemeToggle() {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (!themeBtn) return;
+/* ── vCard ───────────────────────────────────────────────────── */
+function downloadVCard() {
+    const v = PROFILE_CONFIG.vcard;
+    const vc = [
+        'BEGIN:VCARD', 'VERSION:3.0',
+        `N:${v.lastName};${v.firstName};;;`,
+        `FN:${PROFILE_CONFIG.name}`,
+        `ORG:${v.organization}`,
+        `TITLE:${v.title}`,
+        `TEL;TYPE=CELL:${v.phone}`,
+        v.email ? `EMAIL;TYPE=INTERNET:${v.email}` : '',
+        `URL:${v.website || window.location.href}`,
+        `ADR;TYPE=WORK:;;${v.address};;;`,
+        `NOTE:${v.note}`,
+        'END:VCARD'
+    ].filter(Boolean).join('\r\n');
 
-    let isDark = true;
-    themeBtn.addEventListener('click', () => {
-        isDark = !isDark;
-        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        themeBtn.innerHTML = isDark ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>';
-        if (window.lucide) lucide.createIcons();
+    const blob = new Blob([vc], { type: 'text/vcard;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Sisamane_Dimak.vcf';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Contact saved! 🎴');
+}
+
+/* ── Copy Link ───────────────────────────────────────────────── */
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href)
+        .then(() => showToast('Link copied! 🔗'))
+        .catch(() => showToast('Profile URL: ' + window.location.href));
+}
+
+/* ── Toast ───────────────────────────────────────────────────── */
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toast-msg');
+    if (!t || !m) return;
+    m.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── Theme Toggle ─────────────────────────────────────────────── */
+function setupThemeToggle() {
+    const btn = document.getElementById('theme-btn');
+    if (!btn) return;
+    let dark = true;
+    btn.addEventListener('click', () => {
+        dark = !dark;
+        document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
+        btn.innerHTML = dark
+            ? '<i data-lucide="sun"></i>'
+            : '<i data-lucide="moon"></i>';
+        lucide.createIcons();
     });
 }

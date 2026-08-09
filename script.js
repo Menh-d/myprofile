@@ -121,13 +121,12 @@ function setupModals() {
 
     // Button bindings
     document.getElementById('btn-vcard')?.addEventListener('click', downloadVCard);
-    document.getElementById('btn-qr')?.addEventListener('click', () => openModal(qrModal, generateQR));
+    document.getElementById('btn-qr')?.addEventListener('click', () => openModal(qrModal));
     document.getElementById('btn-share')?.addEventListener('click', copyLink);
 
     document.getElementById('dock-vcard')?.addEventListener('click', downloadVCard);
-    document.getElementById('dock-qr')?.addEventListener('click', () => openModal(qrModal, generateQR));
+    document.getElementById('dock-qr')?.addEventListener('click', () => openModal(qrModal));
     document.getElementById('dock-share')?.addEventListener('click', copyLink);
-    document.getElementById('dock-nfc')?.addEventListener('click', () => openModal(nfcModal));
 
     // Close triggers
     document.querySelectorAll('.modal-overlay').forEach(overlay => {

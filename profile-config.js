@@ -17,6 +17,7 @@ const PROFILE_CONFIG = {
     location: "Vientiane Laos",
     phone: "+856 20 77527911",
     avatar: "assets/avatar.jpg",
+    qrImage: "assets/qr-code.png",
 
     // ข้อมูลสำหรับบันทึกผู้ติดต่อ (vCard Contact Info)
     vcard: {

@@ -17,7 +17,7 @@
     <!-- QRCode library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css?v=3.0">
+    <link rel="stylesheet" href="styles.css?v=4.0">
 </head>
 <body>
 
@@ -164,16 +164,21 @@
 
     <!-- ── QR MODAL ── -->
     <div id="qr-modal" class="modal-overlay">
-        <div class="modal-card">
+        <div class="modal-card" style="text-align: center;">
             <button class="modal-close"><i data-lucide="x"></i></button>
-            <h3 class="modal-title">Scan to Visit</h3>
-            <p class="modal-sub">Point your camera at the QR code</p>
-            <div class="qr-frame">
-                <div id="qr-code-container"></div>
+            <h3 class="modal-title">LAO QR Code</h3>
+            <p class="modal-sub">Scan for Transfer / Payment — Sisamane Dimak</p>
+            <div class="qr-frame" style="padding: 12px; background: #fff; border-radius: 20px; overflow: hidden;">
+                <img src="assets/qr-code.png" alt="Sisamane Dimak LAO QR Code" style="width: 100%; max-width: 320px; height: auto; border-radius: 12px; display: block; margin: 0 auto;">
             </div>
-            <button onclick="copyLink()" class="btn btn-primary" style="width:100%; margin-top:16px;">
-                <i data-lucide="copy"></i> Copy Profile Link
-            </button>
+            <div style="display: flex; gap: 8px; margin-top: 16px;">
+                <a href="assets/qr-code.png" download="Sisamane_Dimak_LAO_QR.png" class="btn btn-primary" style="flex: 1; text-decoration: none;">
+                    <i data-lucide="download"></i> Save QR Image
+                </a>
+                <button onclick="copyLink()" class="btn btn-glass" style="flex: 1;">
+                    <i data-lucide="copy"></i> Copy Link
+                </button>
+            </div>
         </div>
     </div>
 
@@ -195,7 +200,7 @@
         </div>
     </div>
 
-    <script src="profile-config.js?v=3.0"></script>
-    <script src="script.js?v=3.0"></script>
+    <script src="profile-config.js?v=4.0"></script>
+    <script src="script.js?v=4.0"></script>
 </body>
 </html>

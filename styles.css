@@ -173,9 +173,9 @@ svg { display: block; }
     box-shadow: var(--shadow-card);
     padding: 28px 24px 26px;
     position: relative;
-    overflow: hidden;
+    /* NO overflow:hidden — it was clipping the action buttons */
     border: 1px solid var(--border-bright);
-    animation: fadeInUp 0.7s var(--ease-spring);
+    animation: fadeInUp 0.5s ease;
 }
 
 /* Specular highlight stripe */
@@ -355,6 +355,9 @@ svg { display: block; }
     gap: 8px;
     align-items: stretch;
     width: 100%;
+    /* Prevent any overflow beyond card bounds */
+    box-sizing: border-box;
+    overflow: visible;
 }
 
 .btn {
@@ -556,14 +559,14 @@ a.about-value:hover { color: var(--accent); }
 /* ── DOCK ────────────────────────────────────────────────────── */
 .dock {
     position: fixed;
-    bottom: 20px;
+    /* Use safe-area-inset-bottom so dock stays above gesture bar on Android/iOS */
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 10px));
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 4px;
     padding: 8px 12px;
     background: rgba(18,20,28,0.92);
-    /* Single blur layer for dock only */
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255,255,255,0.18);
@@ -571,6 +574,8 @@ a.about-value:hover { color: var(--accent); }
     box-shadow: 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
     z-index: 100;
     animation: fadeInUp 0.5s ease 0.1s both;
+    /* Prevent dock from extending beyond screen edge */
+    max-width: calc(100vw - 32px);
 }
 
 [data-theme="light"] .dock {

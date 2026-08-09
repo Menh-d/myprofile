@@ -206,6 +206,12 @@ svg { display: block; }
     margin-bottom: 22px;
 }
 
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .nfc-badge {
     display: flex;
     align-items: center;
@@ -349,15 +355,13 @@ svg { display: block; }
     padding: 0 2px;
 }
 
-/* Action Buttons */
+/* Action Buttons — 2 Equal Columns */
 .hero-actions {
-    display: flex;
-    gap: 8px;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     width: 100%;
-    /* Prevent any overflow beyond card bounds */
     box-sizing: border-box;
-    overflow: visible;
 }
 
 .btn {

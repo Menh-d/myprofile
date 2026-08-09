@@ -17,9 +17,34 @@
     <!-- QRCode library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css?v=6.0">
+    <link rel="stylesheet" href="styles.css?v=7.0">
 </head>
 <body>
+
+    <!-- 🦔 HEDGEHOG INTRO SCREEN 🦔 -->
+    <div id="intro-screen" class="intro-screen">
+        <div class="intro-content">
+            <!-- Speech Bubble -->
+            <div class="speech-bubble">
+                <span class="speech-text">ສະບາຍດີ! Welcome to Menh Profile 🦔💖</span>
+                <span class="speech-sub">Tap hedgehog to enter profile!</span>
+            </div>
+
+            <!-- Hedgehog Character -->
+            <div id="hedgehog-character" class="hedgehog-box" title="Tap to enter profile!">
+                <img src="assets/hedgehog.jpg" alt="Menh Hedgehog" class="hedgehog-img">
+                <div class="hedgehog-glow"></div>
+            </div>
+
+            <!-- Tap Enter Button -->
+            <button id="intro-enter-btn" class="intro-btn">
+                <i data-lucide="sparkles"></i> Enter Profile
+            </button>
+        </div>
+
+        <!-- Container for shooting quill spikes -->
+        <div id="quills-container" class="quills-container"></div>
+    </div>
 
     <!-- Animated Smooth Fade & Zoom Background -->
     <div class="bg-mesh">
@@ -48,6 +73,9 @@
                         NFC Connected
                     </div>
                     <div class="topbar-actions">
+                        <button id="btn-hedgehog" class="icon-btn" title="Replay Hedgehog Greeting">
+                            🦔
+                        </button>
                         <button id="btn-share" class="icon-btn" title="Share profile link">
                             <i data-lucide="share-2"></i>
                         </button>
@@ -200,7 +228,7 @@
         </div>
     </div>
 
-    <script src="profile-config.js?v=6.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="profile-config.js?v=7.0"></script>
+    <script src="script.js?v=7.0"></script>
 </body>
 </html>

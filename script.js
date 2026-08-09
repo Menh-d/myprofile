@@ -28,6 +28,7 @@ const GRADIENTS = {
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof PROFILE_CONFIG === 'undefined') return;
 
+    initHedgehogIntro();
     initAnimatedGradient();
     renderSocialList();
     renderSkills();
@@ -36,6 +37,73 @@ document.addEventListener('DOMContentLoaded', () => {
     setupThemeToggle();
     lucide.createIcons();
 });
+
+/* ── 🦔 Hedgehog Intro & Spike Burst ("ยิงหนาม") Animation ── */
+function initHedgehogIntro() {
+    const introScreen = document.getElementById('intro-screen');
+    const hedgehogBtn = document.getElementById('hedgehog-character');
+    const enterBtn = document.getElementById('intro-enter-btn');
+    const replayBtn = document.getElementById('btn-hedgehog');
+    const quillsContainer = document.getElementById('quills-container');
+
+    if (!introScreen) return;
+
+    let isBursting = false;
+
+    function triggerQuillBurst() {
+        if (isBursting) return;
+        isBursting = true;
+
+        if (hedgehogBtn) hedgehogBtn.classList.add('shake-quills');
+
+        // Spawn 28 glowing quills shooting out 360 degrees
+        if (quillsContainer) {
+            quillsContainer.innerHTML = '';
+            const numQuills = 28;
+
+            for (let i = 0; i < numQuills; i++) {
+                const angle = (i * 360 / numQuills) * (Math.PI / 180);
+                const quill = document.createElement('div');
+                quill.className = 'quill-spike';
+
+                const rotDeg = (i * 360 / numQuills) + 90;
+                quill.style.transform = `translate(-50%, -50%) rotate(${rotDeg}deg) scale(0.5)`;
+                quill.style.opacity = '1';
+                quillsContainer.appendChild(quill);
+
+                const targetDist = 550 + Math.random() * 200;
+                const tx = Math.cos(angle) * targetDist;
+                const ty = Math.sin(angle) * targetDist;
+
+                quill.animate([
+                    { transform: `translate(-50%, -50%) rotate(${rotDeg}deg) scale(0.5)`, opacity: 1 },
+                    { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${rotDeg}deg) scale(1.6)`, opacity: 0 }
+                ], {
+                    duration: 650,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)',
+                    fill: 'forwards'
+                });
+            }
+        }
+
+        // Fade out intro screen to reveal profile page after burst
+        setTimeout(() => {
+            introScreen.classList.add('hide');
+            if (hedgehogBtn) hedgehogBtn.classList.remove('shake-quills');
+            isBursting = false;
+        }, 550);
+    }
+
+    hedgehogBtn?.addEventListener('click', triggerQuillBurst);
+    enterBtn?.addEventListener('click', triggerQuillBurst);
+
+    // Replay intro when user taps hedgehog emoji in topbar
+    replayBtn?.addEventListener('click', () => {
+        introScreen.classList.remove('hide');
+        isBursting = false;
+        showToast('🦔 Hello from Hedgehog!');
+    });
+}
 
 /* ── Animated Gradient Background (Breathing Effect) ────────── */
 function initAnimatedGradient() {
